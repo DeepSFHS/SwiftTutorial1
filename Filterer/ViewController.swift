@@ -23,15 +23,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     
     @IBAction func onGreen(_ sender: UIButton) {
-        if Green.isSelected {
-            let image = UIImage(named: "scenery")!
-            imageView.image = image
-            Green.isSelected = false
-        } else {
-            Green.isSelected = true
-        }
+    if Green.isSelected {
+    let image = UIImage(named: "scenery")
+    imageView.image = image
+    Green.isSelected = false
+    } else {
+    imageView.image = filteredImage
+    Green.isSelected = true
     }
-    
+
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         secondaryMenu.backgroundColor = UIColor.white.withAlphaComponent(0.5)
@@ -44,7 +46,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         
         
-        let avgColor = 107
+        let avgRed = 107
         
         
         
@@ -57,26 +59,34 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 
                 
                 var pixel = rgbaImage.pixels[index]
-                    let redDelta = Int(pixel.red) - avgColor
+                
+                
+                
+                let redDelta = Int(pixel.green) - avgRed
+                
+                
+                
+                var modifier = 1 + 4 * (Double(y)) / Double(rgbaImage.height)
+                
+                if (Int(pixel.green) < avgRed) {
                     
+                    modifier  = 1
                     
-                    var modifier = 1 + 4 * (Double(y)) / Double(rgbaImage.height)
-                    
-                    if (Int(pixel.red) < avgColor) {
-                        
-                        modifier  = 1
-                        
-                    }
-                    
-                    
-                    
-                    pixel.red = UInt8(max(min(255, Int(round(Double(avgColor) + modifier * Double (redDelta)))), 0))
-                    
-                    rgbaImage.pixels[index] = pixel
-
-    }
+                }
+                
+                pixel.green = UInt8(max(min(255, Int(round(Double(avgRed) + modifier * Double (redDelta)))), 0))
+                
+                rgbaImage.pixels[index] = pixel
+                
+                
+                
+            }
+            
         }
-         filteredImage = rgbaImage.toUIImage()
+        
+        
+        
+        filteredImage = rgbaImage.toUIImage()
         
     }
     // MARK: Share
